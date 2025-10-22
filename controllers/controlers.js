@@ -18,6 +18,24 @@ const controlerrs = {
         console.log(error)
         res.status(500).json({msg : "erro no servidor"})
     }
+},
+
+
+    exclusao : async (req,res) => {
+        const {name} = req.body;
+
+        try{
+        if(!name){
+            return res.status(400).json({msg : "os campos sao obrigatorios para deletar"})
+        }
+        const query = `DELETE FROM usuarios WHERE nome = $1`
+        await pool.query(query,[name])
+        res.status(201).json({msg : "usuarios deletado com sucesso"})
+    }
+    catch(error){
+        console.log(error)
+        res.status(500).json({msg : "erro no servidor"})
+    }
 
 }
 }

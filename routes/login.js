@@ -5,5 +5,7 @@ const controlerrs = require('../controllers/controlers')
 
 
 router.post('/ola', middleweres.verificacao, controlerrs.mensage)
+
+router.delete('/delete', middleweres.verificacao, controlerrs.exclusao )
  
 module.exports = router
