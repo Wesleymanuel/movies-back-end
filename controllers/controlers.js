@@ -3,7 +3,7 @@ const bcript = require("bcrypt")
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-const SALT = process.env.SALT_PASSOWORD
+const SALT = 10
 const JWT = process.env.JWT_SECRET
 
 
@@ -19,10 +19,10 @@ const controlerrs = {
         const passowordHash = bcript.hashSync(senha,SALT)
 
     try{
-            const query = `INSERT INTO usuarios (nome,email,cpf,senha) VALUES ($1,$2,$3,$4)`
+            const query = `INSERT INTO usuarios (nome_user,email,cpf,senha) VALUES ($1,$2,$3,$4)`
             const results = await pool.query(query , [name, email, cpf,passowordHash])
-            const token = jwt.sign({id : user.id }, JWT , { expiresIn : "1d" })
-            res.status(201).json({msg : "usuarios cadastrado com sucesso" , user: results.rows[0]})
+            const token = jwt.sign({ id: user.id }, JWT, { expiresIn: "1d" });
+            res.status(201).json({msg : "usuarios cadastrado com sucesso" , user: results.rows[0], token,})
         }
     catch(error){
         console.log(error)
