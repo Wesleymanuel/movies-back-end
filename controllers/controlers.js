@@ -3,9 +3,6 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-const salt = process.env.PASSWORD_HASH;
-
-
 const controlerrs = {
     cadastro : async (req,res) => {
 
@@ -61,7 +58,42 @@ const controlerrs = {
             console.log(error)
             res.status(500).json({msg : "erro no servidor"})
     }
-}
+},
+    login : async (req,res) => {
+        const { name, senha, email } = req.body;
+
+        if(!name || !senha){
+           return res.status(400).json({msg : "os campos de email e senha sao obrigatorios"})
+        }
+
+        try{
+            const query = `SELECT id,senha FROM usuarios WHERE email = $1`
+            const results = await pool.query(query , [email])
+            const user = results.rows[0]
+
+            if (!user) {
+                 return res.status(404).json({ msg: 'Usuário não encontrado' });
+            }
+
+            const passorwordCompare = bcript.compare(senha, user.senha)
+
+            if(!passorwordCompare){
+                return res.status(401).json({msg : "senha incorreta"})
+            }
+
+            jwt.sign({id : user.id}, JWT , {expiresIn : "1d"})
+            
+                res.status(200).json({
+                        msg: 'Login realizado com sucesso',
+                        user: { id: user.id, nome: user.nome, email: user.email },
+                        token,
+                    });
+            
+        }
+        catch(error){
+
+        }
+    }
 }
 
 module.exports = controlerrs

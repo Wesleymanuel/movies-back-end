@@ -4,6 +4,7 @@ const middleweres = require('../middleweres/middlleweres')
 const controlerrs = require('../controllers/controlers')
 
 
+
 router.post('/ola', middleweres.verificacao ,controlerrs.cadastro)
 
 router.delete('/delete', middleweres.verificacao, controlerrs.exclusao )
