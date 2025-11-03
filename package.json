@@ -11,11 +11,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.1",
     "pg": "^8.16.3",
     "react-router-dom": "^7.9.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wesleymanuel/movies-back-end.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Wesleymanuel/movies-back-end/issues"
+  },
+  "homepage": "https://github.com/Wesleymanuel/movies-back-end#readme"
 }

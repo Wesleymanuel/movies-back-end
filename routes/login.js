@@ -4,8 +4,10 @@ const middleweres = require('../middleweres/middlleweres')
 const controlerrs = require('../controllers/controlers')
 
 
-router.post('/ola', middleweres.verificacao, controlerrs.mensage)
+router.post('/ola', middleweres.verificacao ,controlerrs.cadastro)
 
 router.delete('/delete', middleweres.verificacao, controlerrs.exclusao )
+
+router.put('/atualizacao' , middleweres.verificacao , controlerrs.atualizacao)
  
 module.exports = router

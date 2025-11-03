@@ -1,9 +1,9 @@
 
 const middleweres = {
     verificacao : (req,res,next) => {
-        const { name,email,cpf } = req.body;
+        const { nome,email,cpf } = req.body;
 
-        if(!name || !email || !cpf){
+        if(!nome || !email || !cpf){
            return res.status(404).json({msg : "os campos de email e senha sao obrigatorios"})
         }
         next()
