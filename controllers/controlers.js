@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+const jwt_secret = process.env.JWT
+
 const controlerrs = {
     cadastro : async (req,res) => {
 
@@ -60,9 +62,9 @@ const controlerrs = {
     }
 },
     login : async (req,res) => {
-        const { name, senha, email } = req.body;
+        const { email,senha } = req.body;
 
-        if(!name || !senha){
+        if(!email || !senha){
            return res.status(400).json({msg : "os campos de email e senha sao obrigatorios"})
         }
 
@@ -75,23 +77,25 @@ const controlerrs = {
                  return res.status(404).json({ msg: 'Usuário não encontrado' });
             }
 
-            const passorwordCompare = bcript.compare(senha, user.senha)
+            const passorwordCompare = await bcrypt.compare(senha,user.senha)
+
 
             if(!passorwordCompare){
                 return res.status(401).json({msg : "senha incorreta"})
             }
 
-            jwt.sign({id : user.id}, JWT , {expiresIn : "1d"})
+            const token = jwt.sign({id : user.id}, jwt_secret , {expiresIn : "1d"})
             
                 res.status(200).json({
                         msg: 'Login realizado com sucesso',
-                        user: { id: user.id, nome: user.nome, email: user.email },
-                        token,
+                        user: { id: user.id},
+                        token ,
                     });
             
         }
-        catch(error){
 
+        catch(error){
+            console.log(error)
         }
     }
 }
