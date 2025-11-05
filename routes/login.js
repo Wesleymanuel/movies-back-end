@@ -9,7 +9,7 @@ router.post('/ola', middleweres.verificacao ,controlerrs.cadastro)
 
 router.post('/login', middleweres.verificacao, controlerrs.login)
 
-//router.delete('/exclusao', middleweres.verificacao, controlerrs.exclusao )
+router.delete('/exclusao', middleweres.verificacao, controlerrs.exclusao )
 
 router.put('/atualizacao' , middleweres.verificacao , controlerrs.atualizacao)
  

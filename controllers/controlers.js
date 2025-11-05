@@ -52,14 +52,9 @@ const controlerrs = {
 
             const token = jwt.sign({id : user.id}, jwt_secret , {expiresIn : "1d"})
             
-                res.status(200).json({
-                        msg: 'Login realizado com sucesso',
-                        user: { id: user.id},
-                        token ,
-                    });
+                res.status(200).json({msg: 'Login realizado com sucesso',user: { id: user.id},token ,});
             
         }
-
         catch(error){
             console.log(error)
         }
@@ -74,29 +69,63 @@ const controlerrs = {
         }
 
       try{
-        const query = `SELECT id,senha FROM usuarios WHERE email = ($1)`
-        const results = await pool.query(query,[email])
-        const user = results.rows[0];
+            const query = `SELECT id,senha FROM usuarios WHERE email = ($1)`
+            const results = await pool.query(query,[email])
+            const user = results.rows[0];
 
-        if(!user){
-           return res.status(401).json({msg : "usuario nao encontrado"})
-        }
+            if(!user){
+            return res.status(401).json({msg : "usuario nao encontrado"})
+            }
 
-        const newPassowordHash = await bcrypt.hash(senha,10)
+            const newPassowordHash = await bcrypt.hash(senha,10)
 
-        if(!newPassowordHash){
-           return res.status(500).json({msg : "problemas no servidor, tente novamente"})
-        }
+            if(!newPassowordHash){
+            return res.status(500).json({msg : "problemas no servidor, tente novamente"})
+            }
 
-        const newQuery = `UPDATE usuarios SET senha = ($1) WHERE id = ($2)`
-        await pool.query(newQuery,[newPassowordHash,user.id])
+            const newQuery = `UPDATE usuarios SET senha = ($1) WHERE id = ($2)`
+            await pool.query(newQuery,[newPassowordHash,user.id])
 
-        res.status(200).json({msg : "senha renovada com sucesso"})
+            res.status(200).json({msg : "senha renovada com sucesso"})
 
-      }catch(error){
+      }
+      catch(error){
         console.log(error)
       }
     },
+
+    exclusao : async (req,res) => {
+        const {email, senha} = req.body;
+
+        try{
+            if(!email || !senha){
+            return res.status(400).json({msg : "o campos de email e senha sao obrigatorios"})
+            }
+
+            const query = `SELECT id,senha FROM usuarios WHERE email = ($1)`;
+            const results = await pool.query(query, [email])
+            const user = results.rows[0]
+
+            if(!user){
+                return res.status(400).json({msg : "usuarios nao encontrado"})
+            }
+
+            const passoWordVerify = await bcrypt.compare(senha, user.senha);
+
+            if(!passoWordVerify){
+                return res.status(401).json({msg : "senha nao esta correta"});
+            }
+
+            const deleteQuery = `DELETE FROM usuarios WHERE email = ($1) AND id = ($2)`
+            await pool.query(deleteQuery, [email,user.id])
+
+            res.status(200).json({msg : "usuario excluido com sucesso"})
+
+        }
+        catch(erro){
+            console.log(erro)
+        }
+    }
 
 
 }
