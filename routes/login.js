@@ -12,5 +12,7 @@ router.post('/login', middleweres.verificacao, controlerrs.login)
 router.delete('/exclusao', middleweres.verificacao, controlerrs.exclusao )
 
 router.put('/atualizacao' , middleweres.verificacao , controlerrs.atualizacao)
+
+router.post("/favoritos" , controlerrs.favoritos)
  
 module.exports = router

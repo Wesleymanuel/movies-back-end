@@ -50,9 +50,10 @@ const controlerrs = {
                 return res.status(401).json({msg : "senha incorreta"})
             }
 
+            const user_id = user.id
             const token = jwt.sign({id : user.id}, jwt_secret , {expiresIn : "1d"})
             
-                res.status(200).json({msg: 'Login realizado com sucesso',user: { id: user.id},token ,});
+            res.status(200).json({msg: 'Login realizado com sucesso',user_id,token});
             
         }
         catch(error){
@@ -125,6 +126,36 @@ const controlerrs = {
         catch(erro){
             console.log(erro)
         }
+    },
+
+    favoritos : async (req,res) => {
+        const { user_id, filme_id,titulo,genero_id } = req.body;
+
+        try{
+            if(!user_id || !filme_id || !genero_id || !titulo){
+                return res.status(401).json({msg : "os valores sao obrigatorios "})
+            }
+
+            const query = `SELECT id FROM usuarios WHERE id= $1`
+            const results = await pool.query(query,[user_id])
+            const trueUser = results.rows[0]
+
+            if(!trueUser){
+                return res.status(401).json({msg : "usuario nao existe"})
+            }
+
+            const postQuery = `INSERT INTO filmes_favoritos(user_id,filme_id,titulo,genero_id) VALUES ($1,$2,$3,$4)`
+            const insertResults = await pool.query(postQuery,[user_id,filme_id,titulo,genero_id])
+
+            if(!insertResults){
+                return res.status(500).json({msg : "erro no servidor"})
+            }
+            res.status(200).json({msg : "filme salvo com sucesso"})
+        }
+        catch(error){
+            console.log(error)
+        }
+
     }
 
 
